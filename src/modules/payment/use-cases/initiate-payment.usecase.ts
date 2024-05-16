@@ -1,27 +1,27 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { HttpService } from '@nestjs/axios';
-import { lastValueFrom } from 'rxjs';
-import { UseCase } from '@shared/core/use-case';
-import { IExceptionService } from 'src/shared/exceptions/exceptions.interface';
+import { Injectable, Inject } from '@nestjs/common';
+import { IPaymentGateway } from '../core/payment-gateway';
+import { PaymentConfirmationDto } from '../dtos/payment-confirmation.dto';
+import { IExceptionService } from '../../../shared/exceptions/exceptions.interface';
 
 @Injectable()
-export class InitiatePaymentUseCase implements UseCase {
-    constructor(
-        private httpService: HttpService,
-        @Inject(IExceptionService)
-        private readonly exceptionService: IExceptionService
-    ) { }
+export class InitiatePaymentUseCase {
+  constructor(
+    @Inject(IPaymentGateway)
+    private readonly paymentGateway: IPaymentGateway,
+    @Inject(IExceptionService)
+    private readonly exceptionService: IExceptionService,
+  ) {}
 
-    async execute(orderId: string): Promise<any> {
-        
-        const url = process.env.PYTHON_PAYMENT_URL; // URL do serviço Python
+  async execute(paymentInitiate: PaymentConfirmationDto): Promise<void> {
+    const orderId = paymentInitiate.identifier.order_id;
 
-        const response = await lastValueFrom(
-            this.httpService.post(url, {
-                identifier: { orderId }
-            })
-        );
-
-        return response.data;
+    if (!orderId) {
+      this.exceptionService.badRequestException({
+        message: 'Order ID is required',
+        code: 400,
+      });
     }
+
+    return this.paymentGateway.create(orderId);
+  }
 }
