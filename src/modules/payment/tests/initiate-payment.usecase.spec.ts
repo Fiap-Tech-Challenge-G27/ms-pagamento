@@ -38,7 +38,7 @@ describe('InitiatePaymentUseCase', () => {
 
   it('should initiate payment', async () => {
     const paymentInitiateDto: PaymentConfirmationDto = {
-      identifier: { order_id: 'orderId123' },
+      identifier: { orderId: 'orderId123' },
       status: 'Pending',
     };
 
@@ -49,7 +49,7 @@ describe('InitiatePaymentUseCase', () => {
 
   it('should throw BadRequestException if orderId is missing', async () => {
     const paymentInitiateDto: PaymentConfirmationDto = {
-      identifier: { order_id: '' },
+      identifier: { orderId: '' },
       status: 'Pending',
     };
 
