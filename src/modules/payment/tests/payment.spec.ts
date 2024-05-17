@@ -31,7 +31,7 @@ describe('PaymentController', () => {
   describe('POST /initiate', () => {
     it('should initiate payment successfully', async () => {
       const paymentInitiateDto: PaymentConfirmationDto = {
-        identifier: { order_id: 'orderId123' },
+        identifier: { orderId: 'orderId123' },
         status: 'Pending',
       };
 
@@ -42,7 +42,7 @@ describe('PaymentController', () => {
 
     it('should handle errors', async () => {
       const paymentInitiateDto: PaymentConfirmationDto = {
-        identifier: { order_id: 'orderId123' },
+        identifier: { orderId: 'orderId123' },
         status: 'Pending',
       };
 

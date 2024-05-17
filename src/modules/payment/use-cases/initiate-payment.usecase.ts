@@ -13,7 +13,7 @@ export class InitiatePaymentUseCase {
   ) {}
 
   async execute(paymentInitiate: PaymentConfirmationDto): Promise<void> {
-    const orderId = paymentInitiate.identifier.order_id;
+    const orderId = paymentInitiate.identifier.orderId;
 
     if (!orderId) {
       this.exceptionService.badRequestException({

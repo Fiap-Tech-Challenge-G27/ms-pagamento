@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { IPaymentGateway } from '@modules/payment/core/payment-gateway';
+import { IPaymentGateway } from '../core/payment-gateway';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
@@ -8,11 +8,17 @@ export class PaymentGateway implements IPaymentGateway {
 
   async create(orderId: string) {
     const url = this.configService.get<string>('PAYMENT_API_URL');
+    
+    console.log(url);
+
+    if (!url) {
+      throw new Error('PAYMENT_API_URL is not defined in the environment variables');
+    }
 
     const data = {
       identifier: {
-        orderId: orderId,
-      },
+        orderId: orderId
+      }
     };
 
     const response = await fetch(url, {
