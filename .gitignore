@@ -133,3 +133,4 @@ minikube.exe
 kubectl.exe
 
 docker-compose.yml
+dist
