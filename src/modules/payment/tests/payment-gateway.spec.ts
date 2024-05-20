@@ -8,7 +8,7 @@ describe('PaymentGateway', () => {
 
   beforeEach(async () => {
     configServiceMock = {
-      get: jest.fn().mockReturnValue('http://mock.url'),
+      get: jest.fn().mockReturnValue('https://mock.url'),
     } as unknown as ConfigService;
 
     const module: TestingModule = await Test.createTestingModule({
@@ -31,7 +31,7 @@ describe('PaymentGateway', () => {
 
     await paymentGateway.create('orderId123');
 
-    expect(fetchMock).toHaveBeenCalledWith('http://mock.url', {
+    expect(fetchMock).toHaveBeenCalledWith('https://mock.url', {
       method: 'POST',
       body: JSON.stringify({
         identifier: { orderId: 'orderId123' },
