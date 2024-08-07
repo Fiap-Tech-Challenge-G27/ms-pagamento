@@ -134,3 +134,4 @@ kubectl.exe
 
 docker-compose.yml
 dist
+.vscode
