@@ -1,13 +1,14 @@
-import { defineFeature, loadFeature } from 'jest-cucumber';
-import { Test, TestingModule } from '@nestjs/testing';
-import { PaymentController } from '../../src/modules/payment/controller/payment.controller';
-import { InitiatePaymentUseCase } from '../../src/modules/payment/use-cases/initiate-payment.usecase';
-import { PaymentConfirmationDto } from '../../src/modules/payment/dtos/payment-confirmation.dto';
-import { IPaymentGateway } from '../../src/modules/payment/core/payment-gateway';
-import { IExceptionService } from '../../src/shared/exceptions/exceptions.interface';
-import { ConfigService } from '@nestjs/config';
+import { defineFeature, loadFeature } from "jest-cucumber";
+import { Test, TestingModule } from "@nestjs/testing";
+import { PaymentController } from "../../src/modules/payment/controller/payment.controller";
+import { InitiatePaymentUseCase } from "../../src/modules/payment/use-cases/initiate-payment.usecase";
+import { PaymentConfirmationDto } from "../../src/modules/payment/dtos/payment-confirmation.dto";
+import { IPaymentGateway } from "../../src/modules/payment/core/payment-gateway";
+import { IExceptionService } from "../../src/shared/exceptions/exceptions.interface";
+import { ConfigService } from "@nestjs/config";
+import { ConfirmPaymentUseCase } from "../../src/modules/payment/use-cases/confirm-payment.usecase";
 
-const feature = loadFeature('behavior_tests/features/initiatePayment.feature');
+const feature = loadFeature("behavior_tests/features/initiatePayment.feature");
 
 defineFeature(feature, (test) => {
   let paymentController: PaymentController;
@@ -29,8 +30,12 @@ defineFeature(feature, (test) => {
             badRequestException = jest.fn();
           },
         },
+        {
+          provide: ConfirmPaymentUseCase,
+          useValue: jest.fn(),
+        },
         InitiatePaymentUseCase,
-        ConfigService
+        ConfigService,
       ],
     }).compile();
 
@@ -38,23 +43,25 @@ defineFeature(feature, (test) => {
     paymentGatewayMock = module.get<IPaymentGateway>(IPaymentGateway);
   });
 
-  test('Successful Payment Initiation', ({ given, when, then }) => {
+  test("Successful Payment Initiation", ({ given, when, then }) => {
     let paymentInitiateDto: PaymentConfirmationDto;
 
     given('I have an order with ID "order123"', () => {
       paymentInitiateDto = {
-        identifier: { orderId: 'order123' },
-        status: 'Pending',
+        identifier: { orderId: "order123" },
+        status: "Pending",
       };
     });
 
-    when('I initiate the payment for the order', async () => {
+    when("I initiate the payment for the order", async () => {
       await paymentController.initiatePayment(paymentInitiateDto);
     });
 
-    then('the payment gateway should receive a request to create a payment for "order123"', () => {
-      expect(paymentGatewayMock.create).toHaveBeenCalledWith('order123');
-    });
-
+    then(
+      'the payment gateway should receive a request to create a payment for "order123"',
+      () => {
+        expect(paymentGatewayMock.create).toHaveBeenCalledWith("order123");
+      }
+    );
   });
 });
