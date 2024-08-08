@@ -16,6 +16,7 @@ export class PaymentController {
   initiatePayment(
     @Body() paymentInitiate: PaymentConfirmationDto
   ): Promise<void> {
+    console.log(paymentInitiate);
     return this.initiatePaymentUseCase.execute(paymentInitiate);
   }
 
