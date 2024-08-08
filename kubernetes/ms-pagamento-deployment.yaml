@@ -55,3 +55,4 @@ metadata:
   name: ms-pagamento-configmap
 data:
   PAYMENT_API_URL: 'http://sistema-de-pagamento:3000/payment'
+  AWS_SNS_TOPIC_ARN: "arn:aws:sns:us-east-1:851725345801:payment-status-topic"
